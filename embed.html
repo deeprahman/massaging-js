@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Embeded HTML</title>
+</head>
+
+<body>
+    <h1>Sum Engine</h1>
+    <div>
+        <p id="prev_num"></p>
+        <p id="cur_num"></p>
+        <button onclick="postMessageToParent()">Sum</button>
+        <p id="cur_sum"></p>
+    </div>
+    <script>
+        var prev_num = 0;
+
+        function postMessageToParent() {
+            // Get the input number
+            var number = document.getElementById('cur_num').innerHTML;
+
+            // Calculate the sum
+            var sum = prev_num + number;
+
+            // show current sum
+            document.getElementById('cur_sum').innerHTML = sum;
+            // Store the previous number
+            prev_num = number;
+            // Show previous number
+            document.getElementById('prev_num').innerHTML = prev_num;
+
+            // Send the sum to the parent window
+            window.parent.postMessage(sum, '*');
+            console.log('Computing Sum.', ' The Prev Num: '+ prev_num, ' Current Number: '+ number, 'The sum: ' + sum);
+        }
+
+        window.addEventListener('message', function (event) {
+            // Get the number from the message event
+            var number = event.data;
+
+            // Display the sum of the number on the page
+            document.getElementById('cur_num').innerHTML = number;
+            console.log('Getting data from parent. ', 'The number:' + number);
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Example Messaging</title>
+</head>
+
+<body>
+
+    <h1>Calculate Sum</h1>
+    <div>
+        <label for="">Input Number</label>
+        <input id="tst_lbl" type="number">
+        <button onClick="postMessageToIframe()">Submit</button>
+    </div>
+    <iframe src="embed.html"></iframe>
+    <script>
+
+        function postMessageToIframe() {
+            var number = document.getElementById('tst_lbl').value;
+            var iframe = document.querySelector('iframe');
+
+            // Get the window object of the iframe
+            var iframeWindow = iframe.contentWindow;
+
+            // Create a new script element
+            var scriptElement = document.createElement('script');
+
+            // Set the script element's textContent to the JS code that we want to inject into the iframe
+            scriptElement.textContent = `console.log('This is generated from  parent');`;
+
+            // Append the script element to the iframe's document
+            iframeWindow.document.head.appendChild(scriptElement);
+            // Send a message to the iframe
+            iframeWindow.postMessage(number, '*');
+            console.log('Sent Number: ' + number);
+            window.addEventListener('message', e => {
+
+                var sum = e.data;
+
+                // create an p item with id 'cur_sum' under the button element if item not exists**
+                if (!document.getElementById('cur_sum')) {
+                    var p = document.createElement('p');
+                    p.id = 'cur_sum';
+                    document.querySelector('button').after(p);
+                }
+
+                // put the value of the sum as innerHTML in the html element with id 'cur_sum'**
+                document.getElementById('cur_sum').innerHTML = sum;
+                console.log('The received Sum: ' + sum);
+            });
+        }
+    </script>
+</body>
+
+</html>
